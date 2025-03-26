@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Code</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="navbar-top">
+        <h1 class="logo">GreenCode</h1>
+        <a id="auth-btn" class="login-btn" href="#">Logg inn</a>
+    </div>
+
+    <script>
+        const authBtn = document.getElementById("auth-btn");
+        const isLoggedIn = localStorage.getItem("loggedIn") === "true";
+
+        if (isLoggedIn) {
+            authBtn.textContent = "Logg ut";
+            authBtn.href = "#";
+            authBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                localStorage.setItem("loggedIn", "false");
+                location.reload();
+            });
+        } else {
+            authBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                localStorage.setItem("redirectAfterLogin", window.location.pathname);
+                window.location.href = "login.html";
+            });
+        }
+    </script>
+
+    <!-- Navigasjonsmeny -->
+    <div class="navbar">
+        <div class="dropdown">
+            <button class="dropbtn">Articles</button>
+            <div class="dropdown-content">
+                <a href="GreenCode-article.html">Articles</a>
+                <a href="GreenCode-guides.html">Guides</a>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <button class="dropbtn">Use Cases</button>
+            <div class="dropdown-content">
+                <a href="GreenCode-artificialcases.html">Artificial Intelligence</a>
+                <a href="GreenCode-checklist.html">Checklist</a>
+                <a href="GreenCode-user-case-studies.html">User Case Studies</a>
+            </div>
+        </div>
+
+        <a href="GreenCode-carbonfootprint.html">Carbonfootprint</a>
+        <a href="GreenCode-about-us.html">About Us</a>
+
+        <div class="dropdown">
+            <button class="dropbtn">Contact</button>
+            <div class="dropdown-content">
+                <a href="GreenCode-contactus.html">Contact Us</a>
+                <a href="GreenCode-help.html">Help</a>
+                <a href="https://f0fd-128-39-132-236.ngrok-free.app">Forum</a>
+                <a href="GreenCode-tutorials.html">Tutorials</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bilder -->
+    <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pexels.com%2Fsearch%2Fwide%2F&psig=AOvVaw3gJOVj6yRqWYjJmVNQY4WV&ust=1742423236919000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCJCO5MLWlIwDFQAAAAAdAAAAABAE" alt="fancy bilde" id="hovedbilde">
+
+    <h2>What is Green Coding?</h2>
+    <hr>
+    <p>Green coding is known as green IT or sustainable IT, and aims to minimize the environmental impact of IT operations.</p>
+    <p>Historically, the focus has been on replacing hardware with more eco-friendly alternatives or recycling old equipment. However, software’s role is increasingly recognized as a critical factor in reducing IT’s carbon footprint.</p>
+    <p>For example, inefficient coding practices or poorly optimized software can increase energy usage significantly. By prioritizing more efficient development practices, businesses can lower energy consumption and emissions while improving software performance and quality.</p>
+    <hr>
+</body>
+</html>
