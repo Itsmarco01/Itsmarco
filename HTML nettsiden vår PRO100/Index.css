@@ -188,3 +188,27 @@ html {
   margin: auto;
   width: 50%;
 }
+.navbar-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.login-btn {
+    padding: 10px 20px;
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    margin-left: auto;
+}
+
+.login-btn:hover {
+    background-color: #256428;
+}
+
