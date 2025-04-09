@@ -5,38 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Green Code</title>
     <link rel="stylesheet" href="index.css">
-    <style>
-        .login-btn {
-            padding: 10px 20px;
-            background-color: #2e7d32;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-            text-decoration: none;
-            margin-left: auto;
-        }
-
-        .login-btn:hover {
-            background-color: #256428;
-        }
-
-        .navbar-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-        }
-    </style>
 </head>
 <body>
-    <!-- Toppseksjon med logo og login-knapp -->
     <div class="navbar-top">
         <h1 class="logo">GreenCode</h1>
-        <a href="login.html" class="login-btn">Logg inn</a>
+        <div id="user-info">
+            <span id="user-name"></span>
+            <span id="badge-container">Laster badges...</span>
+            <a id="auth-btn" class="login-btn" href="#">Logg inn</a>
+        </div>
     </div>
+
+    
 
     <!-- Navigasjonsmeny -->
     <div class="navbar">
@@ -47,7 +27,7 @@
                 <a href="GreenCode-guides.html">Guides</a>
             </div>
         </div>
-        
+
         <div class="dropdown">
             <button class="dropbtn">Use Cases</button>
             <div class="dropdown-content">
@@ -56,10 +36,10 @@
                 <a href="GreenCode-user-case-studies.html">User Case Studies</a>
             </div>
         </div>
-        
+
         <a href="GreenCode-carbonfootprint.html">Carbonfootprint</a>
         <a href="GreenCode-about-us.html">About Us</a>
-        
+
         <div class="dropdown">
             <button class="dropbtn">Contact</button>
             <div class="dropdown-content">
@@ -68,17 +48,95 @@
                 <a href="https://f0fd-128-39-132-236.ngrok-free.app">Forum</a>
                 <a href="GreenCode-tutorials.html">Tutorials</a>
             </div>
-        </div> 
+        </div>
     </div>
 
     <!-- Bilder -->
     <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pexels.com%2Fsearch%2Fwide%2F&psig=AOvVaw3gJOVj6yRqWYjJmVNQY4WV&ust=1742423236919000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCJCO5MLWlIwDFQAAAAAdAAAAABAE" alt="fancy bilde" id="hovedbilde">
-    
+
     <h2>What is Green Coding?</h2>
     <hr>
     <p>Green coding is known as green IT or sustainable IT, and aims to minimize the environmental impact of IT operations.</p>
     <p>Historically, the focus has been on replacing hardware with more eco-friendly alternatives or recycling old equipment. However, software’s role is increasingly recognized as a critical factor in reducing IT’s carbon footprint.</p>
     <p>For example, inefficient coding practices or poorly optimized software can increase energy usage significantly. By prioritizing more efficient development practices, businesses can lower energy consumption and emissions while improving software performance and quality.</p>
     <hr>
+
+<script type="module">
+// Først, legg til disse manglende importene øverst i script-seksjonen
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCDtb0s8if31AXSdoIao_N4sIODaeVPM98",
+  authDomain: "greencode-project-49744.firebaseapp.com",
+  projectId: "greencode-project-49744",
+  storageBucket: "greencode-project-49744.appspot.com",
+  messagingSenderId: "728982263717",
+  appId: "1:728982263717:web:dcd1f096d04cb52909fa4c",
+  measurementId: "G-8FZXZ885MN"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const authBtn = document.getElementById("auth-btn");
+const badgeContainer = document.getElementById("badge-container");
+const userName = document.getElementById("user-name");
+
+// I onAuthStateChanged-funksjonen, endre måten badges vises på:
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const name = user.displayName || "Bruker";
+    userName.textContent = `Hei, ${name}!`;
+
+    authBtn.textContent = "Logg ut";
+    authBtn.href = "#";
+    authBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      signOut(auth);
+    });
+
+    try {
+      // Hent badges fra collection
+      const badgesRef = collection(db, "badges");
+      const querySnapshot = await getDocs(badgesRef);
+      
+      badgeContainer.innerHTML = "";  // Tøm badge-containeren før vi viser nye badges
+      
+      if (querySnapshot.empty) {
+        badgeContainer.textContent = "Ingen badges funnet";
+      } else {
+        querySnapshot.forEach((doc) => {
+          const badge = doc.data();
+          if (badge && badge.Ikon) {
+            // Opprett kun bildeelementet uten tekst
+            const img = document.createElement("img");
+            img.src = badge.Ikon;
+            img.alt = badge.Navn || 'Badge';
+            img.title = badge.Beskrivelse || ''; // Viser beskrivelsen som tooltip ved hover
+            img.style.width = "40px";
+            img.style.height = "40px";
+            img.style.marginLeft = "5px";
+            
+            // Legg til bildet direkte i container
+            badgeContainer.appendChild(img);
+          }
+        });
+      }
+    } catch (error) {
+      console.error("Feil ved henting av badges:", error);
+      badgeContainer.textContent = "Kunne ikke laste badges";
+    }
+  } else {
+    userName.textContent = "";
+    badgeContainer.textContent = "";
+    authBtn.textContent = "Logg inn";
+    authBtn.href = "login.html";
+  }
+});
+</script>
 </body>
 </html>
