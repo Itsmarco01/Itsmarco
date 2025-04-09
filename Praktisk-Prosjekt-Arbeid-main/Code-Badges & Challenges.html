@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<Title>Badges</Title>
+    <link rel="stylesheet" href="Code-Badges & Challenges.CSS">
+</head>  
+
+<header>
+    <div class="navbar-top">
+        <h1 class="logo">GreenCode</h1>
+        <div id="user-info">
+            <span id="user-name"></span>
+            <span id="badge-container">Laster badges...</span>
+            <a id="auth-btn" class="login-btn" href="#">Logg inn</a>
+        </div>
+    </div>
+<div class="navbar">
+        <a href="index.html">Home</a>
+        <div class="dropdown">
+            <button class="dropbtn">Articles</button>
+            <div class="dropdown-content">
+                <a href="GreenCode-user-case-studies.html">User Case Studies</a>
+                <a href="GreenCode-guides.html">Guides</a>
+                <a href="GreenCode-checklist.html">Checklist</a>
+                <a href="GreenCode-tutorials.html">Tutorials</a>
+            </div>
+        </div>
+        
+        <a href="GreenCode-carbonfootprint.html">Carbonfootprint</a>
+        <a href="">Forum</a>
+        <div class="dropdown">
+            <button class="dropbtn">Contact</button>
+            <div class="dropdown-content">
+                <a href="GreenCode-contactus.html">Contact Us</a>
+                <a href="GreenCode-about-us.html">About Us</a>
+
+            </div>
+        </div> 
+        
+        <div class="dropdown">
+            <button class="dropbtn">Badges & Challenges</button>
+            <div class="dropdown-content">
+                <a href="Code-Badges & Challenges.html">Badges</a>
+                <a href="challenges.html">Challenges</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<body>
+    <div class = "badge-container">
+        
+    <div class="badge">
+        <img src= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlgjIU8lmitI_JBlu3u7hSJIjAIUTNLRn-vg49KeWaM2IZJlBQ6pVPqAK6RssznvIqq_8&usqp=CAU" alt="Badge Tier 1-4">
+        <h4>Show off your commitment to the site with one of your favorite cartoon characters</h4>
+        <p>Description: Upgrade your profile with these awesome badges by interacting with other users on the forum.</p>
+    </div>
+
+    <div class="badge">
+        <img src="https://s3-mittlag-prod.innocode.dev/production/uploads/image/image/418938/article_img_1548848572973.jpg" alt="Badge tier 1">
+        <h4>First Login</h4>
+        <p>Description: Awarded for logging in for the first time.</p>
+        <p>Criteria: User must log in to their account.</p>
+    </div>
+    
+    <div class="badge">
+        <img src="https://img.kidplan.com/storyimage/?id=c5249777-07ee-441a-bcf0-eed22deb86cf.png&oid=832&token=&size=f2048x1440" alt="Badge Tier 4">
+        <h4>10 Posts</h4>
+        <p>Description: Awarded for posting 10 comments.</p>
+        <p>Criteria: User must create 10 posts.</p>
+    </div>
+
+     <div class="badge">
+        <img src="https://img.kidplan.com/storyimage/?id=e740cd70-93dd-4831-86f4-eb999ec6640e.jpg&oid=832&token=&size=f2048x1440" alt="Badge Tier 3">
+        <h4>5 Post badge</h4>
+        <p>Description: Awarded for posting 5 comments.</p>
+        <p>Criteria: User must post 5 times.</p>
+     </div>
+
+     <div class="badge">
+        <img src="https://no.swewe.net/upimage/80/dd/80dd8f140e7fecf3e65eea327bc434a9.jpg" alt="Badge Tier 2">
+        <h4>2 Post badge</h4>
+        <p>Description: Awarded for posting 2 comments.</p>
+        <p>Criteria: User must post 2 times.</p>
+     </div>
+    </div>
+       <footer>
+        <p>&copy; 2025 GreenCode. All rights reserved.</p>
+        <a href="GreenCode-guides.html">Guides</a>
+        <a href="GreenCode-contactus.html">Contact Us</a>
+    </footer>
+    <!-- Firebase-integrasjon - lim inn rett før </body>-taggen i hver HTML-fil -->
+<script type="module">
+    // Firebase importer
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCDtb0s8if31AXSdoIao_N4sIODaeVPM98",
+        authDomain: "greencode-project-49744.firebaseapp.com",
+        projectId: "greencode-project-49744",
+        storageBucket: "greencode-project-49744.appspot.com",
+        messagingSenderId: "728982263717",
+        appId: "1:728982263717:web:dcd1f096d04cb52909fa4c",
+        measurementId: "G-8FZXZ885MN"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let authBtn = document.getElementById("auth-btn");
+    const badgeContainer = document.getElementById("badge-container");
+    const userName = document.getElementById("user-name");
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const name = user.displayName || "Bruker";
+            userName.textContent = `Hei, ${name}!`;
+
+            authBtn.textContent = "Logg ut";
+            authBtn.href = "#";
+            
+            // Fjern eventuelle tidligere event listeners før vi legger til ny
+            const newAuthBtn = authBtn.cloneNode(true);
+            authBtn.parentNode.replaceChild(newAuthBtn, authBtn);
+            authBtn = newAuthBtn;
+            
+            authBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                signOut(auth);
+            });
+
+            try {
+                // Hent badges fra collection
+                const badgesRef = collection(db, "badges");
+                const querySnapshot = await getDocs(badgesRef);
+                
+                badgeContainer.innerHTML = "";  // Tøm badge-containeren før vi viser nye badges
+                
+                if (querySnapshot.empty) {
+                    badgeContainer.textContent = "Ingen badges funnet";
+                } else {
+                    querySnapshot.forEach((doc) => {
+                        const badge = doc.data();
+                        if (badge && badge.Ikon) {
+                            // Opprett kun bildeelementet uten tekst
+                            const img = document.createElement("img");
+                            img.src = badge.Ikon;
+                            img.alt = badge.Navn || 'Badge';
+                            img.title = badge.Beskrivelse || ''; // Viser beskrivelsen som tooltip ved hover
+                            img.style.width = "40px";
+                            img.style.height = "40px";
+                            img.style.marginLeft = "5px";
+                            
+                            // Legg til bildet direkte i container
+                            badgeContainer.appendChild(img);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error("Feil ved henting av badges:", error);
+                badgeContainer.textContent = "Kunne ikke laste badges";
+            }
+        } else {
+            userName.textContent = "";
+            badgeContainer.textContent = "";
+            authBtn.textContent = "Logg inn";
+            authBtn.href = "login.html";
+        }
+    });
+</script>
+</body>
+
+</html>

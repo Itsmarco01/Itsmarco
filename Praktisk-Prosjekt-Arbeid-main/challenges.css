@@ -1,0 +1,257 @@
+:root {
+  --primary: #2c7a7b; /* Main green color from GreenCode */
+  --primary-hover: #3b8c8e; /* Hover color from GreenCode dropdown */
+  --primary-active: #4ca9a9; /* Active color from dropdown hover in GreenCode */
+  --text: #333; /* Text color from GreenCode */
+  --bg: #f9f9f9; /* Background color from GreenCode */
+  --code-bg: #f0f0f0; /* Lighter code background to match overall lighter theme */
+  --green: #2c7a7b; /* Using the site's primary green instead of bright green */
+  --gray: #cccccc;
+  --white: #ffffff;
+}
+
+body.dark {
+  --bg: #1e2a38;
+  --card: #2d3e50;
+  --text: #ffffff;
+  --code-bg: #3c4f64;
+  --green: #00d99f;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', Arial, sans-serif;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Removed padding-top since the header already has positioning */
+}
+
+/* Header inherits from GreenCode.css but adding full width explicitly */
+header {
+  width: 100%;
+}
+
+/* Challenge-specific styling starts here */
+/* These styles override or extend GreenCode.css */
+
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  max-width: 800px;
+  min-height: calc(100vh - 200px); /* Adjusted for header height */
+  padding: 30px 20px;
+  margin-top: 120px; /* Add margin to account for fixed header */
+}
+
+.challenge-container {
+  background-color: auto;
+  border-radius: 8px;
+  padding: 30px;
+  width: 100%;
+  max-width: 750px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Progress Circle */
+.circle-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.progress-ring__background {
+  fill: none;
+  stroke: #e6e6e6;
+  stroke-width: 10;
+}
+
+.progress-ring__circle {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-dasharray: 314;
+  stroke-dashoffset: 314;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.progress-text {
+  fill: var(--primary);
+  font-size: 20px;
+  dominant-baseline: middle;
+}
+
+/* Question */
+#questionText {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+/* Code Boxes */
+.code-snippet {
+  background-color: var(--code-bg);
+  color: var(--text);
+  font-family: monospace;
+  white-space: pre-wrap;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 5px solid var(--primary);
+  margin: 10px 0;
+  text-align: left;
+}
+
+/* Buttons */
+#options {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+#options button,
+#checkBtn,
+#nextBtn {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#options button:hover,
+#checkBtn:hover,
+#nextBtn:hover {
+  background-color: var(--primary-hover);
+  transform: scale(1.05);
+}
+
+#options button.correct {
+  background-color: #28a745;
+}
+
+#options button.wrong {
+  background-color: #dc3545;
+}
+
+/* Explanation + Feedback */
+#explanation {
+  background-color: #f5f5f5;
+  border-left: 5px solid var(--primary);
+  padding: 15px;
+  margin-top: 20px;
+  border-radius: 6px;
+  font-size: 15px;
+  animation: fadeIn 0.4s ease;
+  text-align: left;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Code Editor */
+#inputArea {
+  margin-top: 20px;
+  width: 100%;
+}
+
+#userCode {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--code-bg);
+  color: var(--text);
+  font-family: monospace;
+  border: 2px solid var(--primary);
+  border-radius: 6px;
+  font-size: 15px;
+  resize: vertical;
+  height: 140px;
+}
+
+/* Test Feedback */
+#testResults {
+  margin-top: 15px;
+  font-family: monospace;
+  text-align: left;
+}
+
+/* End Screen */
+#resultScreen {
+  text-align: center;
+  margin-top: 30px;
+}
+
+#scoreText {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.tip {
+  color: var(--primary);
+  font-style: italic;
+}
+
+/* Theme Button */
+#themeToggle {
+  background: none;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  font-size: 18px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+#themeToggle:hover {
+  background: var(--primary);
+  color: white;
+}
+
+/* Utility */
+.hidden {
+  display: none !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  main {
+    padding: 20px 15px;
+  }
+  
+  .challenge-container {
+    padding: 20px;
+  }
+  
+  #options button,
+  #checkBtn,
+  #nextBtn {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+}
